@@ -1,0 +1,14 @@
+checkmk:
+  image: checkmk/check-mk-raw:latest
+  container_name: check-mk
+  restart: unless-stopped
+  ports:
+    - 8081:8080  # Updated from 8081:8080 to 8082:8080
+  volumes:
+    - ./check-mk/check_mk.yml:/etc/check_mk/check_mk.yml
+  networks:
+    example-network:
+      ipv4_address: 172.16.238.14
+  secrets:
+    - checkmk_secret
+

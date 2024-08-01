@@ -1,0 +1,45 @@
+auth_enabled: false
+
+server:
+  http_listen_port: 3100
+
+ingester:
+  chunk_target_size: 1048576
+  max_chunk_age: 1h
+  chunk_retain_period: 1h
+
+storage_config:
+  boltdb_shipper:
+    active_index_directory: /loki/index
+    cache_location: /loki/cache
+    shared_store: filesystem
+  filesystem:
+    directory: /loki/chunks
+
+compactor:
+  working_directory: /loki/compactor
+  shared_store: filesystem
+
+ruler:
+  storage:
+    type: local
+    local:
+      directory: /loki/rules
+  rule_path: /loki/rules
+  alertmanager_url: http://alertmanager:9093
+
+limits_config:
+  enforce_metric_name: false
+  enforce_sample_limit: false
+  max_query_length: 1h
+  max_query_size: 1048576
+
+schema_config:
+  configs:
+    - from: 2020-01-01
+      store: boltdb-shipper
+      object_store: filesystem
+      schema: v10
+      index:
+        prefix: index_
+        shards: 30

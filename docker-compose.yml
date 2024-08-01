@@ -1,0 +1,272 @@
+# version: "3.8"
+
+# services:
+#   app:
+#     build:
+#       context: ./app
+#     restart: unless-stopped
+#     container_name: app
+#     ports:
+#       - 8000:8000
+#     networks:
+#       example-network:
+#         ipv4_address: 172.16.238.10
+#     secrets:
+#       - app_secret
+
+#   prometheus:
+#     image: prom/prometheus:latest
+#     restart: unless-stopped
+#     container_name: prometheus
+#     ports:
+#       - 9090:9090
+#     volumes:
+#       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+#     networks:
+#       example-network:
+#         ipv4_address: 172.16.238.11
+#     secrets:
+#       - prometheus_secret
+
+#   grafana:
+#     image: grafana/grafana
+#     container_name: grafana
+#     restart: unless-stopped
+#     depends_on:
+#       - prometheus
+#     ports:
+#       - 3000:3000
+#     volumes:
+#       - ./grafana/provisioning:/etc/grafana/provisioning
+#     env_file:
+#       - ./grafana/config.monitoring
+#     networks:
+#       example-network:
+#         ipv4_address: 172.16.238.12
+#     secrets:
+#       - grafana_secret
+
+#   loki:
+#     image: grafana/loki:latest
+#     container_name: loki
+#     restart: unless-stopped
+#     ports:
+#       - 3100:3100
+#     volumes:
+#       - ./loki/loki-config.yml:/etc/loki/loki-config.yml
+#     networks:
+#       example-network:
+#         ipv4_address: 172.16.238.13
+#     secrets:
+#       - loki_secret
+
+
+#   check-mk:
+#      image: checkmk/checkmk:latest
+#      restart: unless-stopped
+#      container_name: check-mk
+#      ports:
+#       - 8080:8080
+#      volumes:
+#       - ./check-mk/checkmk.yml:/etc/checkmk/checkmk.yml
+#      networks:
+#        example-network:
+#          ipv4_address: 172.16.238.14
+#      secrets:
+#        - checkmk_secret
+
+#   metabase:
+#     image: metabase/metabase
+#     container_name: metabase
+#     restart: unless-stopped
+#     ports:
+#       - 3001:3000
+#     volumes:
+#        - ./secrets/metabase_secret.txt:/etc/metabase/secrets.txt
+#     networks:
+#       example-network:
+#         ipv4_address: 172.16.238.15
+#     secrets:
+#       - metabase_secret
+
+#   traefik:
+#     image: traefik:v2.7
+#     container_name: traefik
+#     restart: unless-stopped
+#     ports:
+#       - 80:80
+#       - 443:443
+#       - 8080:8080
+#     volumes:
+#       - ./traefik/traefik.yml:/etc/traefik/traefik.yml
+#       - ./traefik/acme.json:/etc/traefik/acme.json
+#       - /var/run/docker.sock:/var/run/docker.sock
+#     networks:
+#       - example-network
+#     secrets:
+#       - traefik_secret
+
+# secrets:
+#   app_secret:
+#     file: ./secrets/app_secret.txt
+#   prometheus_secret:
+#     file: ./secrets/prometheus_secret.txt
+#   grafana_secret:
+#     file: ./secrets/grafana_secret.txt
+#   loki_secret:
+#     file: ./secrets/loki_secret.txt
+#   checkmk_secret:
+#     file: ./secrets/checkmk_secret.txt
+#   metabase_secret:
+#     file: ./secrets/metabase_secret.txt
+#   traefik_secret:
+#     file: ./secrets/traefik_secret.txt
+
+# networks:
+#   example-network:
+#     name: example-network
+#     driver: bridge
+#     ipam:
+#       driver: default
+#       config:
+#         - subnet: 172.16.238.0/24
+
+# volumes:
+#   metabase-data:
+
+
+services:
+  app:
+    build:
+      context: ./app
+    restart: unless-stopped
+    container_name: app
+    ports:
+      - 8000:8000
+    networks:
+      example-network:
+        ipv4_address: 172.16.238.10
+    secrets:
+      - app_secret
+
+  prometheus:
+    image: prom/prometheus:latest
+    restart: unless-stopped
+    container_name: prometheus
+    ports:
+      - 9090:9090
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      example-network:
+        ipv4_address: 172.16.238.11
+    secrets:
+      - prometheus_secret
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+    ports:
+      - 3000:3000
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    env_file:
+      - ./grafana/config.monitoring
+    networks:
+      example-network:
+        ipv4_address: 172.16.238.12
+    secrets:
+      - grafana_secret
+
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    restart: unless-stopped
+    ports:
+      - 3100:3100
+    volumes:
+      - ./loki/loki-config.yml:/etc/loki/loki-config.yml
+    networks:
+      example-network:
+        ipv4_address: 172.16.238.13
+    secrets:
+      - loki_secret
+
+  check-mk:
+    image: checkmk/check-mk-raw:latest
+    platform: linux/amd64
+    container_name: check-mk
+    restart: unless-stopped
+    ports:
+      - 8081:8080
+    volumes:
+      - ./check-mk/checkmk.yml:/etc/check_mk/check_mk.yml
+    networks:
+      example-network:
+        ipv4_address: 172.16.238.14
+    secrets:
+      - checkmk_secret
+
+  metabase:
+    image: metabase/metabase
+    platform: linux/amd64
+    container_name: metabase
+    restart: unless-stopped
+    ports:
+      - 3001:3000
+    volumes:
+      - metabase-data:/metabase-data
+    networks:
+      example-network:
+        ipv4_address: 172.16.238.15
+    secrets:
+      - metabase_secret
+
+  traefik:
+    image: traefik:v2.7
+    container_name: traefik
+    restart: unless-stopped
+    ports:
+      - 8082:80
+      - 443:443
+      - 8080:8080
+    volumes:
+      - ./traefik/traefik.yml:/etc/traefik/traefik.yml
+      - ./traefik/acme.json:/etc/traefik/acme.json
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - example-network
+    secrets:
+      - traefik_secret
+
+secrets:
+  app_secret:
+    file: ./secrets/app_secret.txt
+  prometheus_secret:
+    file: ./secrets/prometheus_secret.txt
+  grafana_secret:
+    file: ./secrets/grafana_secret.txt
+  loki_secret:
+    file: ./secrets/loki_secret.txt
+  checkmk_secret:
+    file: ./secrets/checkmk_secret.txt
+  metabase_secret:
+    file: ./secrets/metabase_secret.txt
+  traefik_secret:
+    file: ./secrets/traefik_secret.txt
+
+networks:
+  example-network:
+    name: example-network
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.238.0/24
+
+volumes:
+  metabase-data:
+

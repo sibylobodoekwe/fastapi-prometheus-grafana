@@ -1,0 +1,10 @@
+version: 1
+config:
+  mb_db_type: postgres
+  mb_db_dbname: metabase
+  mb_db_port: 5432
+  mb_db_user: metabase
+  mb_db_password: metabase
+  mb_db_host: postgres
+  mb_db_conn_properties: ssl=true
+  mb_db_auto_run_migrations: true

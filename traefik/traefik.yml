@@ -1,0 +1,17 @@
+entryPoints:
+  web:
+    address: ":8082"  # Updated from :80 if you changed it to port 8082
+  websecure:
+    address: ":443"
+
+providers:
+  docker:
+    exposedByDefault: false
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: your-email@example.com
+      storage: acme.json
+      httpChallenge:
+        entryPoint: web
