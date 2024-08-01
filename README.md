@@ -44,7 +44,7 @@ After running the above command, you'll have access to the following services an
 * **Loki**: [http://localhost:3100/](http://localhost:3100/)
 * **Check_MK**: [http://localhost:8081/](http://localhost:8081/)
 * **Metabase**: [http://localhost:3001/](http://localhost:3001/)
-* **Traefik Dashboard**: [http://localhost:8080/](http://localhost:8080/)
+* **Traefik Dashboard**: [http://localhost:8080/](http://localhost:443/)
 
 ### Metrics and Logging
 
